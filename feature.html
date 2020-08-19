@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <link rel="stylesheet" type="text/css" href="bulma.min.css">
+  </head>
+  <body>
+
+    <div class="container">
+      <div class="main">
+        <div class="head borderBottom">
+          <h1 class="title">Script do tany</h1>
+          <a href="/">
+            <div class="button voltar">
+              Voltar
+            </div>
+          </a>
+        </div>
+        
+        <div class="body">
+
+          <div id="select" class="">
+            <h1 id="classificacao"class="title">Selecione uma classificação</h1>
+            <div class="buttons is-flex is-centered">
+              <button class="button" value="1">
+                KNN
+              </button>
+              <button class="button" value="2">
+                RandomForest
+              </button>
+              <button class="button" value="3">
+              Support Vector Machines 
+            </button>
+            <button class="button" value="4">
+              Dissimilaridade
+            </button>
+            <!-- <button>
+              Fusão
+            </button> -->
+          </div>
+        </div>
+
+        <div id="output" class="is-bold">
+          
+        </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script>
+      $(function (){
+        var socket = io.connect("http://localhost:3000/run");
+
+        $('#select .buttons .button').click(function (e) {
+          var valor = $(this).val();
+          var nome = $(this).text();
+          socket.emit("selector", valor);
+          $('#classificacao').text(nome)
+        });
+
+        function getCommand (cmd) {
+          switch (true){
+
+            case (cmd === 'class'):
+              $('.body #select').removeClass('is-hidden');
+              outputDisable()
+              break
+              
+            default:
+              console.log("comando desconhecido")
+              break
+          }
+        }
+            
+        function outputEnable(){
+          $('.body #output').removeClass('is-hidden');
+        }
+        
+        function outputDisable(){
+          $('.body #output').addClass('is-hidden');
+        }
+
+        function output(msg, stream, enable) {
+          outputEnable()
+          $('.body #output').append($('<h4>').text(msg.data));
+        }
+
+        socket.on('get', function (msg) {
+          getCommand(msg.data)
+        })
+
+        socket.on('output-update', function (msg) {
+          output(msg)
+        })
+
+
+      });
+    </script>
+
+  </body>
+</html>
