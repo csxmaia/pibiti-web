@@ -9,7 +9,7 @@
     <div class="container">
       <div class="main">
         <div class="head borderBottom">
-          <h1 class="title">Script do tany</h1>
+          <h1 class="title">Script</h1>
           <a href="/">
             <div class="button voltar">
               Voltar
@@ -19,24 +19,24 @@
         
         <div class="body">
 
-          <div id="select" class="">
-            <h1 id="classificacao"class="title">Selecione uma classificação</h1>
+          <div id="select" class="is-hidden">
+            <h1 id="classificacao" class="title notMarginBottom">Selecione uma classificação</h1>
             <div class="buttons is-flex is-centered">
-              <button class="button" value="1">
+              <button class="button" value="0">
                 KNN
               </button>
-              <button class="button" value="2">
+              <button class="button" value="1">
                 RandomForest
               </button>
-              <button class="button" value="3">
+              <button class="button" value="2">
               Support Vector Machines 
             </button>
-            <button class="button" value="4">
+            <button class="button" value="3">
               Dissimilaridade
             </button>
-            <!-- <button>
+            <button class="button" value="4">
               Fusão
-            </button> -->
+            </button>
           </div>
         </div>
 
@@ -55,45 +55,49 @@
       $(function (){
         var socket = io.connect("http://localhost:3000/run");
 
-        $('#select .buttons .button').click(function (e) {
-          var valor = $(this).val();
-          var nome = $(this).text();
-          socket.emit("selector", valor);
-          $('#classificacao').text(nome)
-        });
+        // socket.on('action', function (msg) {
+        //   console.log("teste")
+        //   getAction(msg.data)
+        // })
 
-        function getCommand (cmd) {
-          switch (true){
+        // $('#select .buttons .button').click(function (e) {
+        //   var valor = $(this).val();
+        //   var nome = $(this).text();
+        //   socket.emit("selector", valor);
+        //   $('#classificacao').text(nome)
+        // });
 
-            case (cmd === 'class'):
-              $('.body #select').removeClass('is-hidden');
-              outputDisable()
-              break
+        // function getAction (act) {
+        //   switch (true){
+        //     case (act === 'class'):
+        //       $('.body #select').removeClass('is-hidden');
+        //       // outputDisable()
+        //       break
+        //     case (act === "loading"):
+        //       console.log("loading teste")
+        //       break
               
-            default:
-              console.log("comando desconhecido")
-              break
-          }
-        }
+        //     default:
+        //       console.log("comando desconhecido")
+        //       break
+        //   }
+        // }
             
-        function outputEnable(){
-          $('.body #output').removeClass('is-hidden');
-        }
+        // function outputEnable(){
+        //   $('.body #output').removeClass('is-hidden');
+        // }
         
-        function outputDisable(){
-          $('.body #output').addClass('is-hidden');
-        }
+        // function outputDisable(){
+        //   $('.body #output').addClass('is-hidden');
+        // }
 
-        function output(msg, stream, enable) {
-          outputEnable()
+        function output(msg) {
+          // outputEnable()
           $('.body #output').append($('<h4>').text(msg.data));
-        }
-
-        socket.on('get', function (msg) {
-          getCommand(msg.data)
-        })
-
-        socket.on('output-update', function (msg) {
+          }
+          
+          socket.on('output-update', function (msg) {
+            console.log("teste")
           output(msg)
         })
 

@@ -44,3 +44,7 @@
   /* padding-bottom: 12px; */
   padding-top: 12px;
 }
+
+.notMarginBottom {
+  margin-bottom: 12px !important;
+}
