@@ -51,6 +51,7 @@
     <script src="https://code.jquery.com/jquery-1.9.1.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script>
+      // var socket = io();
       const fileInput = document.querySelector('#file-form input[type=file]');
       fileInput.onchange = () => {
         if (fileInput.files.length > 0) {
@@ -61,12 +62,12 @@
           fileName.textContent = fileInput.files[0].name;
         }
       }
-      $(function () {
-        io.connect("http://localhost:3000/new");
-        // socket.on('asd', function (msg) {
-        //   $('.body').append($('<h4>').text(msg.data));
-        // })
-      });
+      // $(function () {
+      //   io.connect("http://localhost:3000/new");
+      //   socket.on('asd', function (msg) {
+      //     $('.body').append($('<h4>').text(msg.data));
+      //   })
+      // });
     </script>
   </body>
 </html>

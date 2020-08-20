@@ -35,36 +35,41 @@ app.post('/run', function(req, res, next){
 });
 // io.of("/new").on("connection", function (socket) {
 //   console.log("testeeeeeeeeeeeeeeeeeeeeeeee")
+//   io.sockets.emit('asd', { data: "saco" })
 // });
 
 // let shell = new PythonShell('../PIBITI/libsvm-3.24/tools/easy.py', { mode: 'text', args: ['vetTreino.txt', 'vetor_diss_teste.txt']});
 
-io.of("/run").on('connection', (socket) => {
+io.of('/run').on('connection', function (socket) {
   
   console.log('a user connected');
   
   let shell = new PythonShell(`${process.env.MAIN_SCRIPT_PATH}/importar_arquivo.py`, { mode: 'text'});
+  
   shell.on('message', function (message) {
     //get print ad turn into String
     var output = String(message);
     //Split print; to search Actions
     var isAction = output.split(" ")
     console.log(isAction)
+
     //if action emit action to action perform with the data (the real action)
 
     if(isAction[0] === "action") {
       console.log("emitindo "+isAction[1])
-      io.sockets.emit('action', { data: isAction[1]})
+      socket.emit('action', { data: isAction})
       //class is the one of all who need input in script by web, so this special if
-      if(isAction[1] === "class"){
-        socket.on('selector', function(id) {
+      if (isAction[1] === "class" || isAction[1] === "while") {
+        socket.once('selector', function(id) {
+          console.log(id)
           shell.send(id)
         })
       }
-    //if false; return the print as output text
+      //if false; return the print as output text
     }else{
-      io.sockets.emit('output-update', { data: output });
+      socket.emit('output-update', { data: output });
     }
+
   });
   
   socket.on('disconnect', () => {
