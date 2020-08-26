@@ -1,50 +1,41 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel="stylesheet" type="text/css" href="styles.css">
-    <link rel="stylesheet" type="text/css" href="bulma.min.css">
+    <link rel="stylesheet" type="text/css" href="styles.css" />
+    <link rel="stylesheet" type="text/css" href="bulma.min.css" />
   </head>
   <body>
-
     <div class="container">
       <div class="main">
         <div class="head borderBottom">
           <h1 class="title">Script</h1>
           <a href="/">
-            <div class="button voltar">
-              Voltar
-            </div>
+            <div class="button voltar">Voltar</div>
           </a>
         </div>
-        
+
         <div class="body">
-
           <div id="select" class="is-hidden">
-            <h1 id="classificacao" class="title notMarginBottom">Selecione uma classificação</h1>
+            <h1 id="classificacao" class="title notMarginBottom">
+              Selecione uma classificação
+            </h1>
             <div class="buttons is-flex is-centered">
-              <button class="button" value="0">
-                KNN
-              </button>
-              <button class="button" value="1">
-                RandomForest
-              </button>
-              <button class="button" value="2">
-              Support Vector Machines 
-            </button>
-            <button class="button" value="3">
-              Dissimilaridade
-            </button>
-            <button class="button" value="4">
-              Fusão
-            </button>
+              <button class="button" value="0">KNN</button>
+              <button class="button" value="1">RandomForest</button>
+              <button class="button" value="2">Support Vector Machines</button>
+              <button class="button" value="3">Dissimilaridade</button>
+              <button class="button" value="4">Fusão</button>
+            </div>
           </div>
-        </div>
 
-        <div id="loading">
-          LOADING
-        </div>
-        <div id="output" class="is-bold"></div>
+          <div id="loading" class="lds-ellipsis">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
 
+          <div id="output" class="is-bold"></div>
         </div>
       </div>
     </div>
@@ -52,79 +43,6 @@
     <script src="https://code.jquery.com/jquery-1.9.1.js"></script>
     <script src="/socket.io/socket.io.js"></script>
 
-    <script>
-      // var socket = io()
-      const socket = io('http://localhost:3000/run');
-      // $(function (){
-        // var socket = io.connect("http://localhost:3000/run")
-        // socket.connect("http://localhost:3000/run");
-        // io.connect("http://localhost:3000/run");
-
-        $('#select .buttons .button').click(function (e) {
-          outputDisable()
-          var valor = $(this).val();
-          var nome = $(this).text();
-          socket.emit("selector", valor);
-          console.log(nome)
-          $('#classificacao').text(nome)
-          $("#select .buttons .button").prop("disabled", true);
-        });
-
-        // ACTION
-        socket.on('action', function (msg) {
-          console.log(msg.data)
-          getAction(msg.data)
-        })
-
-        function getAction (act) {
-          switch (true){
-            case (act[1] === "class"):
-              $('.body #select').removeClass('is-hidden');
-              outputDisable()
-              break
-              
-            case (act[1] === "loading" && act[2] === "false"):
-              $('#loading').addClass('is-hidden');
-              break
-
-            case (act[1] === "loading" && act[2] === "true"):
-              $('#loading').removeClass('is-hidden');
-              break
-                
-            case (act[1] === "final"):
-              $('#loading').addClass('is-hidden');
-              $("#select .buttons .button").prop("disabled", false);
-              // outputEnable()
-              break
-              
-            default:
-              console.log("comando desconhecido")
-              break
-          }
-        }
-
-        // OUTPUT
-        // function outputEnable(){
-          // $('.body #output').removeClass('is-hidden');
-        // }
-        
-        function outputDisable(){
-          // $('.body #output').addClass('is-hidden');
-          $('.body #output h4').remove();
-        }
-
-        function output(msg) {
-          // outputEnable()
-          $('.body #output').append($('<h4>').text(msg.data));
-        }
-          
-        socket.on('output-update', function (msg) {
-          output(msg)
-        })
-
-
-      // });
-    </script>
-
+    <script type="text/javascript" src="index.js"></script>
   </body>
 </html>

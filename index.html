@@ -1,11 +1,13 @@
 <html>
   <head>
-    <link rel="stylesheet" type="text/css" href="styles.css">
-    <link rel="stylesheet" type="text/css" href="bulma.min.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" />
+    <link rel="stylesheet" type="text/css" href="styles.css" />
+    <link rel="stylesheet" type="text/css" href="bulma.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css"
+    />
   </head>
   <body>
-
     <div class="container">
       <div class="main">
         <div class="head borderBottom">
@@ -13,36 +15,49 @@
         </div>
         <div class="body">
           <div class="upload">
-
             <form method="POST" action="/run" enctype="multipart/form-data">
-                <!-- <input type="file" name="feature" /> -->
-
-                <div id="file-form" class="field">
+              <!-- <input type="file" name="feature" /> -->
+              <div class="feature-input">
+                <div id="file-form" class="field item" name="feature1">
                   <div class="file is-info is-centered is-boxed has-name">
-
-                    <label class="file-label">
-                      <input class="file-input" type="file" name="feature">
+                    <label class="file-label label-container">
+                      <input class="file-input" type="file" name="feature1" />
                       <span class="file-cta">
                         <span class="file-icon">
                           <i class="fas fa-upload"></i>
                         </span>
-                        <span class="file-label">
-                          Envie uma feature
-                        </span>
+                        <span class="file-label"> Feature 1 </span>
                       </span>
-                      <span class="file-name">
-                        Nenhum arquivo selcionado
-                      </span>
+                      <span class="file-name">Nenhum arquivo selecionado</span>
                     </label>
-
                   </div>
                 </div>
-                
+
+                <div id="file-form" class="field item" name="feature2">
+                  <div class="file is-info is-centered is-boxed has-name">
+                    <label class="file-label label-container">
+                      <input class="file-input" type="file" name="feature2" />
+                      <span class="file-cta">
+                        <span class="file-icon">
+                          <i class="fas fa-upload"></i>
+                        </span>
+                        <span class="file-label"> Feature 2 </span>
+                      </span>
+                      <span class="file-name">Nenhum arquivo selecionado</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
               <div>
-                <input class="button is-black" type="submit" name="btn_upload_profile_pic" value="Enviar" />
+                <input
+                  class="button is-black"
+                  type="submit"
+                  name="btn_upload_profile_pic"
+                  value="Enviar"
+                />
               </div>
             </form>
-
           </div>
         </div>
       </div>
@@ -52,22 +67,44 @@
     <script src="/socket.io/socket.io.js"></script>
     <script>
       // var socket = io();
-      const fileInput = document.querySelector('#file-form input[type=file]');
-      fileInput.onchange = () => {
-        if (fileInput.files.length > 0) {
-          const fileTheme = document.querySelector('#file-form .file');
-          const fileName = document.querySelector('#file-form .file-name');
+      const fileInput1 = document.querySelector(
+        '#file-form[name="feature1"] input'
+      );
+      const fileInput2 = document.querySelector(
+        '#file-form[name="feature2"] input'
+      );
+      fileInput1.onchange = () => {
+        if (fileInput1.files.length > 0) {
+          const fileTheme = document.querySelector(
+            '#file-form[name="feature1"] .file'
+          );
+          const fileName = document.querySelector(
+            '#file-form[name="feature1"] .file-name'
+          );
           fileTheme.classList.remove("is-info");
           fileTheme.classList.add("is-success");
-          fileName.textContent = fileInput.files[0].name;
+          fileName.textContent = fileInput1.files[0].name;
         }
-      }
-      // $(function () {
-      //   io.connect("http://localhost:3000/new");
-      //   socket.on('asd', function (msg) {
-      //     $('.body').append($('<h4>').text(msg.data));
-      //   })
-      // });
+      };
+      fileInput2.onchange = () => {
+        if (fileInput2.files.length > 0) {
+          const fileTheme = document.querySelector(
+            '#file-form[name="feature2"] .file'
+          );
+          const fileName = document.querySelector(
+            '#file-form[name="feature2"] .file-name'
+          );
+          fileTheme.classList.remove("is-info");
+          fileTheme.classList.add("is-success");
+          fileName.textContent = fileInput2.files[0].name;
+        }
+      };
+      $(function () {
+        io.connect("http://localhost:3000/new");
+        socket.on("asd", function (msg) {
+          $(".body").append($("<h4>").text(msg.data));
+        });
+      });
     </script>
   </body>
 </html>
