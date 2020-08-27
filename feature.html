@@ -43,6 +43,19 @@
     <script src="https://code.jquery.com/jquery-1.9.1.js"></script>
     <script src="/socket.io/socket.io.js"></script>
 
-    <script type="text/javascript" src="index.js"></script>
+    <script type="module">
+      import { output } from "./index.js";
+      import { getAction } from "./actions.js";
+
+      const socket = io("http://localhost:3000/run");
+      socket.on("action", function (msg) {
+        console.log(msg.data);
+        getAction(msg.data);
+      });
+      socket.on("output-update", function (msg) {
+        console.log(msg);
+        output(msg);
+      });
+    </script>
   </body>
 </html>
