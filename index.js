@@ -6,6 +6,8 @@ const express = require("express");
 const app = express();
 http = require("http").createServer(app);
 io = require("socket.io")(http);
+var fileOne = undefined;
+var fileTwo = undefined;
 
 //static files in public folder
 app.use(express.static(__dirname + "/public"));
@@ -22,17 +24,19 @@ app.post("/run", function (req, res, next) {
   var form = new formidable.IncomingForm();
   form.parse(req, function (err, fields, files) {
     //change file name and path
-    var oldpath = files.feature1.path;
-    var newpath = `${process.env.MAIN_SCRIPT_PATH}/features/` + "data1.txt";
-    fs.rename(oldpath, newpath, function (err) {
+    var oldPath = files.feature1.path;
+    var newPath = `${process.env.MAIN_SCRIPT_PATH}/features/` + "data1.txt";
+    fs.rename(oldPath, newPath, function (err) {
       if (err) throw err;
     });
+    fileOne = files.feature1.name;
     if (files.feature2) {
-      var oldpath = files.feature2.path;
-      var newpath = `${process.env.MAIN_SCRIPT_PATH}/features/` + "data2.txt";
-      fs.rename(oldpath, newpath, function (err) {
+      var oldPath = files.feature2.path;
+      var newPath = `${process.env.MAIN_SCRIPT_PATH}/features/` + "data2.txt";
+      fs.rename(oldPath, newPath, function (err) {
         if (err) throw err;
       });
+      fileTwo = files.feature2.name;
     }
     res.sendFile(__dirname + "/feature.html");
   });
@@ -46,6 +50,20 @@ app.post("/run", function (req, res, next) {
 
 io.of("/run").on("connection", function (socket) {
   console.log("a user connected");
+
+  socket.emit("output-update", {
+    data: "Separando as amostras de treino e de teste...",
+  });
+
+  if (fileTwo) {
+    socket.emit("action", {
+      data: ["action", "2file"],
+    });
+  } else {
+    socket.emit("action", {
+      data: ["action", "1file"],
+    });
+  }
 
   let shell = new PythonShell(
     `${process.env.MAIN_SCRIPT_PATH}/importar_arquivo.py`,

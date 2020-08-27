@@ -5,6 +5,8 @@ const socket = io("http://localhost:3000/run");
 // socket.connect("http://localhost:3000/run");
 // io.connect("http://localhost:3000/run");
 
+var twoFiles = false;
+
 $("#select .buttons .button").click(function (e) {
   outputDisable();
   var valor = $(this).val();
@@ -23,6 +25,15 @@ socket.on("action", function (msg) {
 
 function getAction(act) {
   switch (true) {
+    case act[1] === "1file":
+      buttonDisabledProp(twoFiles, false, true);
+      break;
+
+    case act[1] === "2file":
+      twoFiles = true;
+      buttonDisabledProp(twoFiles, false, true);
+      break;
+
     case act[1] === "class":
       $(".body #select").removeClass("is-hidden");
       outputDisable();
@@ -38,7 +49,7 @@ function getAction(act) {
 
     case act[1] === "final":
       $("#loading").addClass("is-hidden");
-      $("#select .buttons .button").prop("disabled", false);
+      buttonDisabledProp(twoFiles, false);
       // outputEnable()
       break;
 
@@ -53,6 +64,27 @@ function getAction(act) {
 // $('.body #output').removeClass('is-hidden');
 // }
 
+function buttonDisabledProp(hasTwoFiles, disable, first = false) {
+  if (hasTwoFiles === true) {
+    //Only Fusão
+    $("#select .buttons .button[value='4']").prop("disabled", disable);
+    if (first === true) {
+      $("#select .buttons .button[value='0']").prop("disabled", !disable);
+      $("#select .buttons .button[value='1']").prop("disabled", !disable);
+      $("#select .buttons .button[value='2']").prop("disabled", !disable);
+      $("#select .buttons .button[value='3']").prop("disabled", !disable);
+    }
+  } else {
+    $("#select .buttons .button[value='0']").prop("disabled", disable);
+    $("#select .buttons .button[value='1']").prop("disabled", disable);
+    $("#select .buttons .button[value='2']").prop("disabled", disable);
+    $("#select .buttons .button[value='3']").prop("disabled", disable);
+    if (first === true) {
+      $("#select .buttons .button[value='4']").prop("disabled", !disable);
+    }
+  }
+}
+
 function outputDisable() {
   // $('.body #output').addClass('is-hidden');
   $(".body #output h4").remove();
@@ -64,6 +96,7 @@ function output(msg) {
 }
 
 socket.on("output-update", function (msg) {
+  console.log(msg);
   output(msg);
 });
 
