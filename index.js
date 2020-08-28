@@ -6,8 +6,14 @@ const express = require("express");
 const app = express();
 http = require("http").createServer(app);
 io = require("socket.io")(http);
+
+//state
 var fileOne = undefined;
 var fileTwo = undefined;
+var classification = undefined;
+
+var output = "";
+var isAction = "";
 
 //static files in public folder
 app.use(express.static(__dirname + "/public"));
@@ -41,62 +47,51 @@ app.post("/run", function (req, res, next) {
     res.sendFile(__dirname + "/feature.html");
   });
 });
-// io.of("/new").on("connection", function (socket) {
-//   console.log("testeeeeeeeeeeeeeeeeeeeeeeee")
-//   io.sockets.emit('asd', { data: "saco" })
-// });
-
-// let shell = new PythonShell('../PIBITI/libsvm-3.24/tools/easy.py', { mode: 'text', args: ['vetTreino.txt', 'vetor_diss_teste.txt']});
 
 io.of("/run").on("connection", function (socket) {
   console.log("a user connected");
 
+  //Initial context
   socket.emit("output-update", {
     data: "Separando as amostras de treino e de teste...",
   });
 
-  if (fileTwo) {
-    socket.emit("action", {
-      data: ["action", "2file"],
-    });
-  } else {
+  if (!fileTwo) {
     socket.emit("action", {
       data: ["action", "1file"],
     });
+  } else {
+    socket.emit("action", {
+      data: ["action", "2file"],
+    });
   }
 
-  let shell = new PythonShell(
+  var shell = new PythonShell(
     `${process.env.MAIN_SCRIPT_PATH}/importar_arquivo.py`,
     { mode: "text" }
   );
 
   shell.on("message", function (message) {
-    //get print ad turn into String
-    var output = String(message);
-    //Split print; to search Actions
-    var isAction = output.split(" ");
+    output = String(message);
+    isAction = output.split(" && ");
     console.log(isAction);
-
-    //if action emit action to action perform with the data (the real action)
-
+    //if action emit action to action, perform with the data (the real action)
     if (isAction[0] === "action") {
-      console.log("emitindo " + isAction[1]);
       socket.emit("action", { data: isAction });
-      //class is the one of all who need input in script by web, so this special if
       if (isAction[1] === "class" || isAction[1] === "while") {
         socket.once("selector", function (id) {
-          console.log(id);
           shell.send(id);
         });
       }
       //if false; return the print as output text
     } else {
-      socket.emit("output-update", { data: output });
+      socket.emit("output", { data: output });
     }
   });
 
   socket.on("disconnect", () => {
     console.log("user disconnected");
+    shell.childProcess.kill("SIGINT");
   });
 });
 

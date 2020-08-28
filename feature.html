@@ -35,6 +35,36 @@
             <div></div>
           </div>
 
+          <!-- <div id="result" class="result">
+            <div class="tile is-ancestor">
+              <div class="tile is-vertical is-12">
+                <div class="tile">
+                  <div class="tile is-parent">
+                    <article class="tile is-child notification is-info">
+                      <p class="subtitle">Número de acertos</p>
+                      <p class="title">37</p>
+                    </article>
+                    <article class="tile is-child notification is-warning">
+                      <p class="subtitle">Porcentagem de acerto</p>
+                      <p class="title">23.125</p>
+                    </article>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div> -->
+
+          <div id="result" class="result is-hidden">
+            <div
+              id="result-item-1"
+              class="result-item notification is-primary"
+            ></div>
+            <div class="result-item notification is-warning">
+              <p class="subtitle">Porcentagem de acerto</p>
+              <p class="title">23.125</p>
+            </div>
+          </div>
+
           <div id="output" class="is-bold"></div>
         </div>
       </div>
@@ -44,17 +74,34 @@
     <script src="/socket.io/socket.io.js"></script>
 
     <script type="module">
-      import { output } from "./index.js";
       import { getAction } from "./actions.js";
+      import {
+        output,
+        outputDisable,
+        resultBox,
+        removeResult,
+      } from "./functions.js";
 
       const socket = io("http://localhost:3000/run");
+
       socket.on("action", function (msg) {
         console.log(msg.data);
         getAction(msg.data);
       });
-      socket.on("output-update", function (msg) {
+      socket.on("output", function (msg) {
         console.log(msg);
         output(msg);
+      });
+
+      $("#select .buttons .button").click(function (e) {
+        outputDisable();
+        resultBox(false);
+        removeResult();
+        var valor = $(this).val();
+        var nome = $(this).text();
+        socket.emit("selector", valor);
+        $("#classificacao").text(nome);
+        $("#select .buttons .button").prop("disabled", true);
       });
     </script>
   </body>
