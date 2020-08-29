@@ -1,46 +1,88 @@
+// var state={
+var resultCount = 0;
+var theme = ["is-primary", "is-warning", "is-info"];
+// }
+
 export function output(msg) {
   // outputEnable()
-  $(".body #output").append($("<h4>").text(msg.data));
+  let output = document.getElementById("output");
+  let textElement = document.createElement("H4");
+  let text = document.createTextNode(msg.data);
+
+  textElement.appendChild(text);
+  output.appendChild(textElement);
+}
+
+export function outputEnable() {
+  let output = document.getElementById("output");
+  output.classList.remove("is-hidden");
 }
 
 export function outputDisable() {
-  // $('.body #output').addClass('is-hidden');
-  $(".body #output h4").remove();
+  let output = document.getElementById("output");
+  output.classList.add("is-hidden");
+  output.innerHTML = "";
 }
 
 export function resultBox(status) {
-  if (status === true) $("#result").removeClass("is-hidden");
-  else $("#result").addClass("is-hidden");
+  let result = document.getElementById("result");
+  if (status === true) result.classList.remove("is-hidden");
+  else {
+    result.classList.add("is-hidden");
+    removeResult();
+  }
 }
 
 export function addResult(act) {
   let splitter = act.split(" &value& ");
-  $("#result-item-1").append($("<p class='subtitle'>").text(splitter[0]));
-  $("#result-item-1").append($("<p class='title'>").text(splitter[1]));
+
+  let tile = document.createElement("DIV");
+  tile.setAttribute("id", `result-item-${resultCount}`);
+  tile.classList.add("result-item", "notification", theme[resultCount]);
+
+  let subtitleElement = document.createElement("P");
+  subtitleElement.classList.add("subtitle");
+  let subtitleText = document.createTextNode(splitter[0]);
+  subtitleElement.appendChild(subtitleText);
+
+  let titleElement = document.createElement("P");
+  titleElement.classList.add("title");
+  let titleText = document.createTextNode(splitter[1]);
+  titleElement.appendChild(titleText);
+
+  tile.appendChild(subtitleElement);
+  tile.appendChild(titleElement);
+
+  let resultDiv = document.getElementById("result");
+  resultDiv.append(tile);
+
+  resultCount += 1;
 }
 
 export function removeResult() {
-  console.log("calling");
-  $(".result-item p").remove();
+  resultCount = 0;
+  let removeResult = document.getElementById("result");
+  removeResult.innerHTML = "";
 }
 
 export function buttonDisabledProp(hasTwoFiles, disable, first = false) {
+  var allButtons = document.getElementsByName("class-button");
   if (hasTwoFiles === true) {
     //Only Fusão
-    $("#select .buttons .button[value='4']").prop("disabled", disable);
+    for (var x = 0; x < allButtons.length; x++) {
+      if (allButtons[x].value == 4) allButtons[x].disabled = disable;
+    }
     if (first === true) {
-      $("#select .buttons .button[value='0']").prop("disabled", !disable);
-      $("#select .buttons .button[value='1']").prop("disabled", !disable);
-      $("#select .buttons .button[value='2']").prop("disabled", !disable);
-      $("#select .buttons .button[value='3']").prop("disabled", !disable);
+      for (var x = 0; x < ["0", "1", "2", "3"].length; x++) {
+        allButtons[x].disabled = !disable;
+      }
     }
   } else {
-    $("#select .buttons .button[value='0']").prop("disabled", disable);
-    $("#select .buttons .button[value='1']").prop("disabled", disable);
-    $("#select .buttons .button[value='2']").prop("disabled", disable);
-    $("#select .buttons .button[value='3']").prop("disabled", disable);
-    if (first === true) {
-      $("#select .buttons .button[value='4']").prop("disabled", !disable);
+    for (var x = 0; x < allButtons.length; x++) {
+      if (["0", "1", "2", "3"].includes(allButtons[x].value)) {
+        allButtons[x].disabled = disable;
+      }
     }
+    if (first === true) allButtons[4].disabled = !disable;
   }
 }

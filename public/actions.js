@@ -1,7 +1,7 @@
 import {
   resultBox,
   addResult,
-  removeResult,
+  outputEnable,
   outputDisable,
   buttonDisabledProp,
 } from "./functions.js";
@@ -20,18 +20,21 @@ export function getAction(act) {
       break;
 
     case act[1] === "class":
-      $(".body #select").removeClass("is-hidden");
+      let classification = document.getElementById("select");
+      classification.classList.remove("is-hidden");
       outputDisable();
       resultBox(false);
       break;
 
     //loading enable n disable
     case act[1] === "loading" && act[2] === "false":
-      $("#loading").addClass("is-hidden");
+      let loading_add = document.getElementById("loading");
+      loading_add.classList.add("is-hidden");
       break;
 
     case act[1] === "loading" && act[2] === "true":
-      $("#loading").removeClass("is-hidden");
+      let loading_remove = document.getElementById("loading");
+      loading_remove.classList.remove("is-hidden");
       break;
 
     case act[1] === "result":
@@ -39,10 +42,12 @@ export function getAction(act) {
       break;
 
     case act[1] === "final":
-      $("#loading").addClass("is-hidden");
-      $("#result").removeClass("is-hidden");
+      let loading = document.getElementById("loading");
+      let result = document.getElementById("result");
+      loading.classList.add("is-hidden");
+      result.classList.remove("is-hidden");
       buttonDisabledProp(twoFiles, false);
-      // outputEnable();
+      outputEnable();
       break;
 
     default:

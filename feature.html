@@ -20,11 +20,19 @@
               Selecione uma classificação
             </h1>
             <div class="buttons is-flex is-centered">
-              <button class="button" value="0">KNN</button>
-              <button class="button" value="1">RandomForest</button>
-              <button class="button" value="2">Support Vector Machines</button>
-              <button class="button" value="3">Dissimilaridade</button>
-              <button class="button" value="4">Fusão</button>
+              <button class="button" value="0" name="class-button">KNN</button>
+              <button class="button" value="1" name="class-button">
+                RandomForest
+              </button>
+              <button class="button" value="2" name="class-button">
+                Support Vector Machines
+              </button>
+              <button class="button" value="3" name="class-button">
+                Dissimilaridade
+              </button>
+              <button class="button" value="4" name="class-button">
+                Fusão
+              </button>
             </div>
           </div>
 
@@ -55,14 +63,14 @@
           </div> -->
 
           <div id="result" class="result is-hidden">
-            <div
+            <!-- <div
               id="result-item-1"
               class="result-item notification is-primary"
             ></div>
             <div class="result-item notification is-warning">
               <p class="subtitle">Porcentagem de acerto</p>
               <p class="title">23.125</p>
-            </div>
+            </div> -->
           </div>
 
           <div id="output" class="is-bold"></div>
@@ -77,6 +85,7 @@
       import { getAction } from "./actions.js";
       import {
         output,
+        outputEnable,
         outputDisable,
         resultBox,
         removeResult,
@@ -93,16 +102,19 @@
         output(msg);
       });
 
-      $("#select .buttons .button").click(function (e) {
-        outputDisable();
+      var classButtons = document.querySelector(".buttons");
+      classButtons.addEventListener("click", (e) => handleClass(e));
+      var classButton = document.querySelectorAll("button");
+      var classTitle = document.querySelector("#classificacao");
+
+      function handleClass(e) {
         resultBox(false);
-        removeResult();
-        var valor = $(this).val();
-        var nome = $(this).text();
-        socket.emit("selector", valor);
-        $("#classificacao").text(nome);
-        $("#select .buttons .button").prop("disabled", true);
-      });
+        let value = e.target.value;
+        let name = e.target.textContent;
+        socket.emit("class-select", value);
+        classButton.forEach((v) => v.setAttribute("disabled", true));
+        classTitle.innerHTML = name;
+      }
     </script>
   </body>
 </html>

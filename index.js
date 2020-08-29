@@ -52,7 +52,7 @@ io.of("/run").on("connection", function (socket) {
   console.log("a user connected");
 
   //Initial context
-  socket.emit("output-update", {
+  socket.emit("output", {
     data: "Separando as amostras de treino e de teste...",
   });
 
@@ -79,7 +79,7 @@ io.of("/run").on("connection", function (socket) {
     if (isAction[0] === "action") {
       socket.emit("action", { data: isAction });
       if (isAction[1] === "class" || isAction[1] === "while") {
-        socket.once("selector", function (id) {
+        socket.once("class-select", function (id) {
           shell.send(id);
         });
       }
