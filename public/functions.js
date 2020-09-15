@@ -1,7 +1,25 @@
 // var state={
 var resultCount = 0;
 var theme = ["is-primary", "is-warning", "is-info"];
+var nameFiles = [];
 // }
+
+export function handleFileName(names) {
+  nameFiles = names;
+  console.log(nameFiles);
+  createElementsFile();
+}
+
+export function createElementsFile() {
+  let files = document.getElementById("files");
+  files.innerHTML = `
+    ${
+      !nameFiles[1]
+        ? "Arquivo: " + nameFiles[0]
+        : "Arquivos: " + nameFiles[0] + ", " + nameFiles[1]
+    }
+  `;
+}
 
 export function output(msg) {
   // outputEnable()
@@ -20,7 +38,12 @@ export function outputEnable() {
 
 export function outputDisable() {
   let output = document.getElementById("output");
+  outputClear();
   output.classList.add("is-hidden");
+}
+
+export function outputClear() {
+  let output = document.getElementById("output");
   output.innerHTML = "";
 }
 

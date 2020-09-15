@@ -15,6 +15,12 @@ var classification = undefined;
 var output = "";
 var isAction = "";
 
+var custom = "";
+var templateCustom = ["action", "result"];
+
+var fusao = ["Soma", "Produto", "Max"];
+var fusaoCount = 0;
+
 //static files in public folder
 app.use(express.static(__dirname + "/public"));
 
@@ -29,7 +35,6 @@ app.post("/run", function (req, res, next) {
   var fs = require("fs");
   var form = new formidable.IncomingForm();
   form.parse(req, function (err, fields, files) {
-    //change file name and path
     var oldPath = files.feature1.path;
     var newPath = `${process.env.MAIN_SCRIPT_PATH}/features/` + "data1.txt";
     fs.rename(oldPath, newPath, function (err) {
@@ -37,13 +42,18 @@ app.post("/run", function (req, res, next) {
     });
     fileOne = files.feature1.name;
     if (files.feature2) {
+      var fileName = "";
+      files.feature1.name !== ""
+        ? ((fileTwo = files.feature2.name), (fileName = "data2"))
+        : (fileOne = files.feature2.name), (fileName = "data1");
       var oldPath = files.feature2.path;
-      var newPath = `${process.env.MAIN_SCRIPT_PATH}/features/` + "data2.txt";
+      var newPath = `${process.env.MAIN_SCRIPT_PATH}/features/${fileName}.txt`;
       fs.rename(oldPath, newPath, function (err) {
         if (err) throw err;
       });
-      fileTwo = files.feature2.name;
     }
+    custom = "";
+    console.log("Special: " + custom);
     res.sendFile(__dirname + "/feature.html");
   });
 });
@@ -58,11 +68,11 @@ io.of("/run").on("connection", function (socket) {
 
   if (!fileTwo) {
     socket.emit("action", {
-      data: ["action", "1file"],
+      data: ["action", "1file", fileOne],
     });
   } else {
     socket.emit("action", {
-      data: ["action", "2file"],
+      data: ["action", "2file", fileOne, fileTwo],
     });
   }
 
@@ -74,8 +84,42 @@ io.of("/run").on("connection", function (socket) {
   shell.on("message", function (message) {
     output = String(message);
     isAction = output.split(" && ");
-    console.log(isAction);
+    // console.log(isAction);
     //if action emit action to action, perform with the data (the real action)
+
+    if (isAction[0] === "exec") {
+      if (isAction[2] === "init") {
+        socket.emit("output", {
+          data: "Gerando arquivos de treino e teste...",
+        });
+        custom = isAction[1];
+      }
+      if (isAction[2] === "end") {
+        custom = "";
+      }
+    }
+
+    if (custom === "svm") {
+      var isResult = output.split(" ");
+      // console.log(isResult);
+      if (isResult[0] === "Accuracy") {
+        templateCustom[2] = `Accuracy &value& ${isResult[2]} ${isResult[3]}`;
+        socket.emit("action", { data: templateCustom });
+      }
+    }
+
+    if (custom === "fusao") {
+      var isResult = output.split(" ");
+      console.log(isResult);
+      if (isResult[0] === "Total" && (isResult[6] !== null && isResult[6] !== undefined)) {
+        console.log(isResult[6]);
+        console.log(typeof (isResult[6]));
+        templateCustom[2] = `${fusao[fusaoCount]} &value& ${isResult[6]}(${isResult[3]})`;
+        socket.emit("action", { data: templateCustom });
+        fusaoCount += 1;
+      }
+    }
+
     if (isAction[0] === "action") {
       socket.emit("action", { data: isAction });
       if (isAction[1] === "class" || isAction[1] === "while") {
@@ -84,7 +128,7 @@ io.of("/run").on("connection", function (socket) {
         });
       }
       //if false; return the print as output text
-    } else {
+    } else if (custom === "") {
       socket.emit("output", { data: output });
     }
   });

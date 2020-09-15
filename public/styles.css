@@ -73,7 +73,14 @@ button {
 }
 
 .notMarginBottom {
-  margin-bottom: 12px !important;
+  margin-bottom: 0px !important;
+}
+
+#files {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -10px;
+  margin-bottom: 5px;
 }
 
 .result {
@@ -89,8 +96,8 @@ button {
   width: 100%;
 }
 
-.testing {
-  margin: 8px !important;
+#output {
+  margin-top: -16px;
 }
 
 /* LOADING */
