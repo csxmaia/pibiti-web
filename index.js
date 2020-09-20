@@ -41,7 +41,7 @@ app.post("/run", function (req, res, next) {
       if (err) throw err;
     });
     fileOne = files.feature1.name;
-    if (files.feature2) {
+    if (files.feature2.name !== '') {
       var fileName = "";
       files.feature1.name !== ""
         ? ((fileTwo = files.feature2.name), (fileName = "data2"))
