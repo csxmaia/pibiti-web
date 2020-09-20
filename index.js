@@ -35,17 +35,19 @@ app.post("/run", function (req, res, next) {
   var fs = require("fs");
   var form = new formidable.IncomingForm();
   form.parse(req, function (err, fields, files) {
-    var oldPath = files.feature1.path;
-    var newPath = `${process.env.MAIN_SCRIPT_PATH}/features/` + "data1.txt";
-    fs.rename(oldPath, newPath, function (err) {
-      if (err) throw err;
-    });
-    fileOne = files.feature1.name;
+    if(files.feature1.name !== ''){
+      var oldPath = files.feature1.path;
+      var newPath = `${process.env.MAIN_SCRIPT_PATH}/features/` + "data1.txt";
+      fs.rename(oldPath, newPath, function (err) {
+        if (err) throw err;
+      });
+      fileOne = files.feature1.name;
+    }
     if (files.feature2.name !== '') {
       var fileName = "";
       files.feature1.name !== ""
-        ? ((fileTwo = files.feature2.name), (fileName = "data2"))
-        : (fileOne = files.feature2.name), (fileName = "data1");
+      ? ((fileTwo = files.feature2.name), (fileName = "data2"))
+      : (fileOne = files.feature2.name), (fileName = "data1");
       var oldPath = files.feature2.path;
       var newPath = `${process.env.MAIN_SCRIPT_PATH}/features/${fileName}.txt`;
       fs.rename(oldPath, newPath, function (err) {
@@ -76,9 +78,14 @@ io.of("/run").on("connection", function (socket) {
     });
   }
 
+  var options = {
+    mode: 'text',
+    pythonPath: 'C:/Python38/python',
+  }
+
   var shell = new PythonShell(
     `${process.env.MAIN_SCRIPT_PATH}/importar_arquivo.py`,
-    { mode: "text" }
+    options
   );
 
   shell.on("message", function (message) {
