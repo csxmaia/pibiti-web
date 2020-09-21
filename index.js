@@ -45,9 +45,13 @@ app.post("/run", function (req, res, next) {
     }
     if (files.feature2.name !== '') {
       var fileName = "";
-      files.feature1.name !== ""
-      ? ((fileTwo = files.feature2.name), (fileName = "data2"))
-      : (fileOne = files.feature2.name), (fileName = "data1");
+      if (files.feature1.name !== ""){
+        fileTwo = files.feature2.name; 
+        fileName = "data2";
+      }else{
+        fileOne = files.feature2.name;
+        fileName = "data1";
+      }
       var oldPath = files.feature2.path;
       var newPath = `${process.env.MAIN_SCRIPT_PATH}/features/${fileName}.txt`;
       fs.rename(oldPath, newPath, function (err) {
