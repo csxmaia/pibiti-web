@@ -35,7 +35,7 @@ app.post("/run", function (req, res, next) {
   var fs = require("fs");
   var form = new formidable.IncomingForm();
   form.parse(req, function (err, fields, files) {
-    if(files.feature1.name !== ''){
+    if (files.feature1.name !== '') {
       var oldPath = files.feature1.path;
       var newPath = `${process.env.MAIN_SCRIPT_PATH}/features/` + "data1.txt";
       fs.rename(oldPath, newPath, function (err) {
@@ -45,10 +45,10 @@ app.post("/run", function (req, res, next) {
     }
     if (files.feature2.name !== '') {
       var fileName = "";
-      if (files.feature1.name !== ""){
-        fileTwo = files.feature2.name; 
+      if (files.feature1.name !== "") {
+        fileTwo = files.feature2.name;
         fileName = "data2";
-      }else{
+      } else {
         fileOne = files.feature2.name;
         fileName = "data1";
       }
@@ -84,7 +84,7 @@ io.of("/run").on("connection", function (socket) {
 
   var options = {
     mode: 'text',
-    pythonPath: 'C:/Python38/python',
+    // pythonPath: 'C:/Python38/python',
   }
 
   var shell = new PythonShell(
@@ -126,9 +126,11 @@ io.of("/run").on("connection", function (socket) {
         console.log(isResult[6]);
         console.log(typeof (isResult[6]));
         templateCustom[2] = `${fusao[fusaoCount]} &value& ${isResult[6]}(${isResult[3]})`;
+        console.log(templateCustom)
         socket.emit("action", { data: templateCustom });
         fusaoCount += 1;
       }
+      fusaoCount = 0;
     }
 
     if (isAction[0] === "action") {
