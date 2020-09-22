@@ -34,6 +34,16 @@ app.post("/run", function (req, res, next) {
   var formidable = require("formidable");
   var fs = require("fs");
   var form = new formidable.IncomingForm();
+  try {
+    fs.unlinkSync(`${process.env.MAIN_SCRIPT_PATH}/features/data1.txt`)
+  } catch (error) {
+    console.log("data 1 nao existe para exclusao")
+  }
+  try {
+    fs.unlinkSync(`${process.env.MAIN_SCRIPT_PATH}/features/data2.txt`)
+  } catch (error) {
+    console.log("data 2 nao existe para exclusao")
+  }
   form.parse(req, function (err, fields, files) {
     if (files.feature1.name !== '') {
       var oldPath = files.feature1.path;
@@ -60,6 +70,13 @@ app.post("/run", function (req, res, next) {
     }
     custom = "";
     console.log("Special: " + custom);
+    // fs.access(`${process.env.MAIN_SCRIPT_PATH}/features/data1.txt`, fs.F_OK, (err) => {
+    //   if (err) {
+    //     console.error(err)
+    //     return
+    //   }
+    //   console.log("existe")
+    // })
     res.sendFile(__dirname + "/feature.html");
   });
 });
@@ -126,11 +143,13 @@ io.of("/run").on("connection", function (socket) {
         console.log(isResult[6]);
         console.log(typeof (isResult[6]));
         templateCustom[2] = `${fusao[fusaoCount]} &value& ${isResult[6]}(${isResult[3]})`;
+        fusaoCount += 1;
         console.log(templateCustom)
         socket.emit("action", { data: templateCustom });
-        fusaoCount += 1;
+        if (fusaoCount === 3) {
+          fusaoCount = 0;
+        }
       }
-      fusaoCount = 0;
     }
 
     if (isAction[0] === "action") {
