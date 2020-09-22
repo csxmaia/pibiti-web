@@ -31,6 +31,8 @@ app.get("/", function (req, res) {
 
 //File upload
 app.post("/run", function (req, res, next) {
+  fileOne = undefined;
+  fileTwo = undefined;
   var formidable = require("formidable");
   var fs = require("fs");
   var form = new formidable.IncomingForm();
@@ -56,6 +58,7 @@ app.post("/run", function (req, res, next) {
     if (files.feature2.name !== '') {
       var fileName = "";
       if (files.feature1.name !== "") {
+        //caso feature 1 exista setar como data2, normal
         fileTwo = files.feature2.name;
         fileName = "data2";
       } else {
