@@ -19,12 +19,21 @@
           </a>
         </div>
         <div class="body">
-          <!-- <div id="loading" class="lds-ellipsis">
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-          </div> -->
+          <div id="loading-geral">
+            <div id="loading" class="lds-ellipsis none">
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+            </div>
+            <div id="texto-loading" class="is-size-4">
+          </div>
+            
+          <div id="resultado" class="is-size-4 none">
+
+          </div>
+
+          </div>
           <div id="2">
             <div id="title-texto" class="is-size-4">
               <h3>Leia esse texto para a gravação do audio</h3>
@@ -49,6 +58,8 @@
       if(id==2) {
         let titleHead = document.getElementById("title-head");
         titleHead.innerHTML = `Incluir pessoa por gravação`; 
+        let panelId = document.getElementById("3");
+        panelId.classList.add("none");
       }
       if(id==3) {
         let panelId = document.getElementById("2");
@@ -56,10 +67,36 @@
       }
       const divText = document.getElementById("texto");
       const titleText = document.getElementById("title-texto");
+      const loading = document.getElementById("loading");
 
       const socket = io("http://localhost:3000/pessoa-gravacao");
 
       socket.emit("envia-comando", id);
+
+      socket.on("text_without", function(msg) {
+        divText.classList.remove("is-primary");
+        divText.classList.add("is-success");
+        divText.classList.add("is-size-4");
+        divText.innerHTML = msg.data
+      });
+
+      socket.on("loading", function(msg) {
+        if(msg.loading === "true"){
+          loading.classList.remove("none");
+          let textoLoading = document.getElementById("text-loading");
+          textoLoading.innerHTML = `${msg.data}`;
+        }else {
+          loading.classList.add("none");
+        }
+      });
+
+      socket.on("resultado", function(msg) {
+        let loadinggeral = document.getElementById("loading-geral")
+        loadinggeral.classList.add("none")
+        let resultado = document.getElementById("resultado")
+        resultado.classList.remove("none")
+        result.innerHTML = `${msg.data}`
+      });
 
       const text = [
         `1 - A terra do Brasil, que está na América, uma das quatro partes do mundo, não se
@@ -90,7 +127,7 @@
           assim.`
       ]
       socket.on("etapa-text", function(msg) {
-        titleText.innerHTML = `<h3>Leia esse texto para a gravação do audio ${msg.data+1}</h3>`
+        titleText.innerHTML = `<h3>Leia esse texto para a gravação do audio ${parseInt(msg.data)+1}</h3>`
         divText.innerHTML = text[msg.data]
       });
 

@@ -90,11 +90,11 @@ app.post("/classificador-pessoa/:id", function (req, res) {
           newPath = {...newPath, [name]:`${process.env.MAIN_SCRIPT_PATH}/PIBITI/audios_gravados/${(ultimo_audio+1)+index}.wav`}
         });
         
-        // Object.keys(newPath).map(function(name, index) {
-        //   fs.rename(oldPath[name], newPath[name], function (err) {
-        //     if (err) throw err;
-        //   });
-        // })
+        Object.keys(newPath).map(function(name, index) {
+          fs.rename(oldPath[name], newPath[name], function (err) {
+            if (err) throw err;
+          });
+        })
         res.sendFile(__dirname + "/pages/pessoa.html");
       }
       if(id==4){
@@ -186,11 +186,33 @@ io.of("/pessoa-gravacao").on("connection", function (socket) {
     //if action emit action to action, perform with the data (the real action)
 
     if (isAction[0] === "action") {
+
+      if(isAction[1] === "text_without"){
+        socket.emit("text_without", {
+          data: isAction[2],
+        });
+      }
+
+      if(isAction[1] === "loading"){
+        socket.emit("loading", {
+          loading: isAction[2],
+          data: isAction[3],
+        });
+      }
+
+      if(isAction[1] === "result"){
+        socket.emit("loading", {
+          loading: isAction[2],
+          data: isAction[3],
+        });
+      }
+
       if (isAction[1] === "text") {
         socket.emit("etapa-text", {
           data: isAction[2],
         });
       }
+
     }
   })
 
