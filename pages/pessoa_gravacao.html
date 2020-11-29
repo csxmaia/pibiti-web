@@ -27,11 +27,11 @@
               <div></div>
             </div>
             <div id="texto-loading" class="is-size-4">
+
+            </div>
           </div>
             
-          <div id="resultado" class="is-size-4 none">
-
-          </div>
+          
 
           </div>
           <div id="2">
@@ -39,6 +39,20 @@
               <h3>Leia esse texto para a gravação do audio</h3>
             </div>
             <div id="texto" class="tile notification is-primary">
+
+            </div>
+            <div id="loading-geral">
+              <div id="loading" class="lds-ellipsis none">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+              </div>
+              <div id="texto-loading" class="is-size-4">
+
+              </div>
+            </div>
+            <div id="resultado" class="is-size-4 none">
 
             </div>
           </div>
@@ -74,6 +88,7 @@
       socket.emit("envia-comando", id);
 
       socket.on("text_without", function(msg) {
+        titleText.innerHTML = ""
         divText.classList.remove("is-primary");
         divText.classList.add("is-success");
         divText.classList.add("is-size-4");
@@ -95,7 +110,8 @@
         loadinggeral.classList.add("none")
         let resultado = document.getElementById("resultado")
         resultado.classList.remove("none")
-        result.innerHTML = `${msg.data}`
+        resultado.innerHTML = `${msg.data}`
+        divText.classList.add("none")
       });
 
       const text = [
