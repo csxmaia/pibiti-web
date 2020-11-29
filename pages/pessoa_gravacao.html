@@ -52,13 +52,13 @@
 
               </div>
             </div>
-            <div id="resultado" class="is-size-4 none">
-
-            </div>
           </div>
+          <div id="resultado" class="is-size-4 none">
 
+          </div>
+          
           <div id="3">
-            <div>
+            <div id="fale">
               <h3 class="is-size-4">Fale qualquer coisa por no minimo 6 segundos.</h3>
             </div>
           </div>
@@ -110,6 +110,13 @@
         loadinggeral.classList.add("none")
         let resultado = document.getElementById("resultado")
         resultado.classList.remove("none")
+        if(id==3){
+          resultado.classList.add("tile") 
+          resultado.classList.add("notification") 
+          resultado.classList.add("is-primary") 
+          let fale = document.getElementById("fale");
+          fale.classList.add("none")
+        }
         resultado.innerHTML = `${msg.data}`
         divText.classList.add("none")
       });
