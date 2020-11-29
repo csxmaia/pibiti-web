@@ -1,0 +1,17 @@
+.body {
+  display: flex;
+  justify-content: center;
+}
+
+.envio {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.file {
+  margin-left: 16px;
+}
+.none {
+  display: none;
+}

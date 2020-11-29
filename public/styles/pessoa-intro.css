@@ -1,0 +1,37 @@
+.body {
+  height: 200px;
+}
+.options {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.head{}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(249,249,249);
+  border: 1px solid #c4c4c4;
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.item button {
+  margin-top: 12px;
+}
+
+/* .descobrir {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.descobrir button {
+  margin-top: 12px;
+} */

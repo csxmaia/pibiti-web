@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="styles/styles.css" />
+    <link rel="stylesheet" type="text/css" href="styles/index.css" />
+    <link rel="stylesheet" type="text/css" href="styles/bulma.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <div class="main">
+        <div class="head borderBottom">
+          <h1 class="title">Script</h1>
+        </div>
+        <div class="body">
+          <div class="options">
+            <button id="base" class="button is-primary">
+              Classificar toda a base
+            </button>
+            <button id="pessoa" class="button is-link">
+              Classificar e incluir pessoas
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+     <script type="module">
+      var base = document.getElementById("base");
+      var pessoa = document.getElementById("pessoa");
+      base.addEventListener("click", () => window.location.href = "/classificador-base");
+      pessoa.addEventListener("click", () => window.location.href = "/classificador-pessoa");
+    </script>
+  </body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="../../styles/styles.css" />
+    <link rel="stylesheet" type="text/css" href="../../styles/pessoa-gravacao.css" />
+    <link rel="stylesheet" type="text/css" href="../../styles/bulma.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <div class="main">
+         <div class="head borderBottom">
+          <h1 class="title">Incluir pessoa por gravação</h1>
+          <a href="/">
+            <div class="button voltar">Voltar</div>
+          </a>
+        </div>
+        <div class="body">
+          <div id="loading" class="lds-ellipsis">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+          <div id="title-texto" class="is-size-4">
+            <h3>Leia esse texto para a gravação do audio</h3>
+          </div>
+          <div id="texto" class="tile notification is-primary">
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="module">
+      const id = (location.href.split('/'))[4]
+      const divText = document.getElementById("texto");
+      const titleText = document.getElementById("title-texto");
+
+      const socket = io("http://localhost:3000/pessoa-gravacao");
+
+      socket.emit("envia-comando", id);
+
+      socket.on("output", function (msg) {
+        console.log(msg);
+        let loading = document.getElementById("loading");
+        let output = document.getElementById("output");
+        let textElement = document.createElement("H4");
+        let text = document.createTextNode(msg.data);
+        
+        textElement.appendChild(text);
+        output.appendChild(textElement);
+        output.classList.remove("none");
+        loading.classList.add("none");
+      });
+
+      const text = [
+        `1 - A terra do Brasil, que está na América, uma das quatro partes do mundo, não se
+          descobriu de propósito, e de principal intento; mas acaso indo Pedro Álvares Cabral,
+          por mandado de el-rei d. Manuel, no ano de 1500 para as Índias, por capitão-mor de
+          12 naus, afastando-se da costa de Guiné, que já era descoberta ao Oriente, achou
+          estoutra ao Ocidente, da qual não havia notícia alguma, foi osteando alguns dias
+          com tormenta até chegar a um porto seguro, do qual a terra vizinha ficou com o
+          mesmo nome`,
+        `2 - A liberdade, Sancho, é um dos mais preciosos dons que os homens receberam dos
+          céus. Com ela não podem igualar-se os tesouros que a terra encerra nem que o mar
+          cobre; a liberdade, assim como pela honra, se pode e deve aventurar a vida, e, pelo
+          contrário, o cativeiro é o maior mal que pôde vir aos homens`,
+        `3 - Se tu vens, por exemplo, às quatro da tarde, às três horas, eu começarei a ser feliz.
+          Quanto mais a hora passar minha felicidade irá aumentar. Quando chegar às quatro,
+          estarei inquieta e agitada e descobrirei o preço da felicidade! Mas se você vier a
+          qualquer momento, eu não saberei a hora de começar a preparar o meu coração... É
+          preciso ter ritos.`,
+        `4 - O quintal se dividia em três brinquedos. O Jardim Zoológico. A Europa que ficava
+          perto da cerca bem feitinha da casa de seu Julinho. Por que Europa? Nem meu
+          passarinho sabia. Lá que a gente brincava de bondinho de Pão de Açúcar. Pegava a
+          caixa de botão e enfiava todos eles num barbante.`,
+        `5 - Pois é, está tudo errado! Bola é bola, porque é redonda. Mas bolo nem sempre é
+          redondo. E por que será que a bola não é a mulher do bolo? Eu acho que as coisas
+          deviam ter nome mais apropriado.
+          Cadeira, por exemplo. Devia chamar sentador, não cadeira, que não quer dizer nada.
+          E travesseiro? Devia chamar cabeceiro, lógico! Também, agora, eu só vou falar
+          assim.`
+      ]
+      socket.on("etapa-text", function(msg) {
+        titleText.innerHTML = `<h3>Leia esse texto para a gravação do audio ${msg.data+1}</h3>`
+        divText.innerHTML = text[msg.data]
+      });
+
+    </script>
+  </body>
+  </body>
+</html>

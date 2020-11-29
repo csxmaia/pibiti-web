@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="styles/styles.css" />
+    <link rel="stylesheet" type="text/css" href="styles/pessoa-intro.css" />
+    <link rel="stylesheet" type="text/css" href="styles/bulma.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <div class="main">
+        <div class="head borderBottom">
+          <h1 class="title">Script</h1>
+        </div>
+        <div class="body">
+          <div class="options">
+            <div class="item">
+              <div class="head">
+                <h2 class="is-size-4">Incluir pessoa</h2>
+              </div>
+              <button id="1" class="button">
+                Incluir pessoa por upload
+              </button>
+              <button id="2" class="button">
+                Incluir pessoa por gravação
+              </button>
+            </div>
+            <div class="item">
+              <div class="head">
+                <h2 class="is-size-4">Descobrir pessoa</h2>
+              </div>
+              <button id="3" class="button">
+                Gravar uma amostra para teste
+              </button>
+              <button id="4" class="button">
+                Upload de amostra já gravada para teste
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+     <script type="module">
+      var id1 = document.getElementById("1");
+      var id2 = document.getElementById("2");
+      var id3 = document.getElementById("3");
+      var id4 = document.getElementById("4");
+      id1.addEventListener("click", () => window.location.href = "/classificador-pessoa/upload/1");
+      id2.addEventListener("click", () => window.location.href = "/classificador-pessoa/2");
+      id3.addEventListener("click", () => window.location.href = "/classificador-pessoa/3");
+      id4.addEventListener("click", () => window.location.href = "/classificador-pessoa/upload/4");
+    </script>
+  </body>
+</html>

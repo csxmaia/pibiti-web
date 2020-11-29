@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="../../styles/styles.css" />
+    <link rel="stylesheet" type="text/css" href="../../styles/pessoa.css" />
+    <link rel="stylesheet" type="text/css" href="../../styles/bulma.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <div class="main">
+        <div class="head borderBottom">
+          <h1 class="title">Script</h1>
+          <a href="/">
+            <div class="button voltar">Voltar</div>
+          </a>
+        </div>
+        <div class="body">
+          <div id="loading" class="lds-ellipsis">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+
+          <div class="tile notification is-primary none" id="output">
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="module">
+      const id = (location.href.split('/'))[4]
+
+      const socket = io("http://localhost:3000/pessoa-upload");
+
+      socket.emit("envia-comando", id);
+
+      socket.on("output", function (msg) {
+        let loading = document.getElementById("loading");
+        let output = document.getElementById("output");
+        let textElement = document.createElement("H4");
+        let text = document.createTextNode(msg.data);
+        
+        textElement.appendChild(text);
+        output.appendChild(textElement);
+        output.classList.remove("none");
+        loading.classList.add("none");
+      });
+
+    </script>
+  </body>
+</html>
