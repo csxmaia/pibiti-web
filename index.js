@@ -201,8 +201,7 @@ io.of("/pessoa-gravacao").on("connection", function (socket) {
       }
 
       if(isAction[1] === "result"){
-        socket.emit("loading", {
-          loading: isAction[2],
+        socket.emit("resultado", {
           data: isAction[3],
         });
       }
